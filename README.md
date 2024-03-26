@@ -36,9 +36,5 @@ sudo apt install ./code_arm64.deb
 
 
 
-## Tech Stack
 
-**Client:** React, Redux, TailwindCSS
-
-**Server:** Node, Express
 
