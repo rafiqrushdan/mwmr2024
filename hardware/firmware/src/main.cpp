@@ -27,13 +27,25 @@ ros::Subscriber<std_msgs::Int16> sub3("motor3", &motor3_callback);
 ros::Subscriber<std_msgs::Int16> sub4("motor4", &motor4_callback);
 
 ////////////// ENCODER //////////////
-Encoder encoder1(15, 2, 250, false);
+Encoder encoder1(ENC1A, ENC1B, 250, false);
+Encoder encoder2(ENC2A, ENC2B, 250, false);
+Encoder encoder3(ENC3A, ENC3B, 250, false);
+Encoder encoder4(ENC4A, ENC4B, 250, false);
 
 std_msgs::Int16 enc1;
+std_msgs::Int16 enc2;
+std_msgs::Int16 enc3;
+std_msgs::Int16 enc4;
 
 ros::Publisher pub1("enc1", &enc1);
+ros::Publisher pub2("enc2", &enc2);
+ros::Publisher pub3("enc3", &enc3);
+ros::Publisher pub4("enc4", &enc4);
 
 void encoder1Update();
+void encoder2Update();
+void encoder3Update();
+void encoder4Update();
 
 void send_encoder_data();
 
@@ -64,7 +76,13 @@ void loop()
 void send_encoder_data()
 {
   enc1.data = encoder1.get_count();
+  enc2.data = encoder2.get_count();
+  enc3.data = encoder3.get_count();
+  enc4.data = encoder4.get_count();
   pub1.publish(&enc1);
+  pub2.publish(&enc2);
+  pub3.publish(&enc3);
+  pub4.publish(&enc4);
 }
 
 void motor1_callback(const std_msgs::Int16 &speed)
@@ -90,4 +108,19 @@ void motor4_callback(const std_msgs::Int16 &speed)
 void encoder1Update()
 {
   encoder1.encoderUpdate();
+}
+
+void encoder2Update()
+{
+  encoder2.encoderUpdate();
+}
+
+void encoder3Update()
+{
+  encoder3.encoderUpdate();
+}
+
+void encoder4Update()
+{
+  encoder4.encoderUpdate();
 }

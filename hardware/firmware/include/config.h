@@ -6,3 +6,12 @@
 #define MOTOR3B 25
 #define MOTOR4A 32
 #define MOTOR4B 35
+
+#define ENC1A 15
+#define ENC1B 2
+#define ENC2A 0
+#define ENC2B 4
+#define ENC3A 16
+#define ENC3B 17
+#define ENC4A 5
+#define ENC4B 18
