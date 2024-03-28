@@ -17,4 +17,4 @@
 #define ENC4B 18
 
 #define CPR 120
-#define ENC_DELAY 1000
+#define ENC_DELAY 1000ul
