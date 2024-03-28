@@ -48,6 +48,7 @@ void encoder3Update();
 void encoder4Update();
 
 void send_encoder_data();
+unsigned long prev_time;
 
 void setup()
 {
@@ -73,12 +74,18 @@ void setup()
   attachInterrupt(digitalPinToInterrupt(ENC3B), encoder1Update, CHANGE);
   attachInterrupt(digitalPinToInterrupt(ENC4A), encoder1Update, CHANGE);
   attachInterrupt(digitalPinToInterrupt(ENC4B), encoder1Update, CHANGE);
+
+  prev_time = millis();
 }
 
 void loop()
 {
   nh.spinOnce();
-  send_encoder_data();
+  if (millis() - prev_time > ENC_DELAY)
+  {
+    send_encoder_data();
+    prev_time = millis();
+  }
   delay(20);
 }
 
