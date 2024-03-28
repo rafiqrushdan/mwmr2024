@@ -4,7 +4,7 @@
 This project has been used for Final Year Project (FYP) for the last year of the semester from 2023 to 2024. 
 
 The title for my (FYP) is **"DEVELOPMENT OF AN INDOOR AUTONOMOUS ROBOT USING ULTRASONIC SENSOR- BASED NAVIGATION"**.Therefore feel free to go through the research paper in the reference below.
-https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://www.handsontec.com/dataspecs/module/BTS7960%2520Motor%2520Driver.pdf&ved=2ahUKEwiyi_33vpaFAxUm2DgGHY61DuQQFnoECCAQAQ&usg=AOvVaw0IWVR-1gosuocPG1Wmpnxk
+
 
 
 
@@ -40,7 +40,7 @@ sudo apt install ./code_arm64.deb
 
 All the pins in connected with **EPS32 DevKit V1 38 Pins** please refer to the picture below:
 
-![https://drive.google.com/file/d/1AI2QbzsefAE3LMqP4vz8AkL2fTM-HgcE/view?usp=sharing]
+![fyp2_schematic_diagram.drawio.png]
 
 
 ### Motor Pins Configuration
