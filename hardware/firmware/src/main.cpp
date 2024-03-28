@@ -27,7 +27,7 @@ ros::Subscriber<std_msgs::Int16> sub3("motor3", &motor3_callback);
 ros::Subscriber<std_msgs::Int16> sub4("motor4", &motor4_callback);
 
 ////////////// ENCODER //////////////
-Encoder encoder1(ENC1A, ENC1B, CPR, true);
+Encoder encoder1(ENC1A, ENC1B, CPR, false);
 Encoder encoder2(ENC2A, ENC2B, CPR, false);
 Encoder encoder3(ENC3A, ENC3B, CPR, false);
 Encoder encoder4(ENC4A, ENC4B, CPR, false);
@@ -68,12 +68,12 @@ void setup()
 
   attachInterrupt(digitalPinToInterrupt(ENC1A), encoder1Update, CHANGE);
   attachInterrupt(digitalPinToInterrupt(ENC1B), encoder1Update, CHANGE);
-  attachInterrupt(digitalPinToInterrupt(ENC2A), encoder1Update, CHANGE);
-  attachInterrupt(digitalPinToInterrupt(ENC2B), encoder1Update, CHANGE);
-  attachInterrupt(digitalPinToInterrupt(ENC3A), encoder1Update, CHANGE);
-  attachInterrupt(digitalPinToInterrupt(ENC3B), encoder1Update, CHANGE);
-  attachInterrupt(digitalPinToInterrupt(ENC4A), encoder1Update, CHANGE);
-  attachInterrupt(digitalPinToInterrupt(ENC4B), encoder1Update, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(ENC2A), encoder2Update, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(ENC2B), encoder2Update, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(ENC3A), encoder3Update, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(ENC3B), encoder3Update, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(ENC4A), encoder4Update, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(ENC4B), encoder4Update, CHANGE);
 
   prev_time = millis();
 }
