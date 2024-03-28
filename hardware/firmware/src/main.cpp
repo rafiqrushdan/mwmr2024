@@ -59,11 +59,20 @@ void setup()
   nh.subscribe(sub4);
   // encoder
   nh.advertise(pub1);
+  nh.advertise(pub2);
+  nh.advertise(pub3);
+  nh.advertise(pub4);
 
   delay(100);
 
-  attachInterrupt(digitalPinToInterrupt(15), encoder1Update, CHANGE);
-  attachInterrupt(digitalPinToInterrupt(2), encoder1Update, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(ENC1A), encoder1Update, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(ENC1B), encoder1Update, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(ENC2A), encoder1Update, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(ENC2B), encoder1Update, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(ENC3A), encoder1Update, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(ENC3B), encoder1Update, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(ENC4A), encoder1Update, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(ENC4B), encoder1Update, CHANGE);
 }
 
 void loop()
