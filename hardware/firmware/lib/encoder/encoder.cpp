@@ -20,6 +20,7 @@ Encoder::Encoder(int pin0, int pin1, int cpr, bool reversed)
     pinMode(this->pin1, INPUT_PULLUP);
 
     lastState = digitalRead(this->pin0);
+    prev_time = millis();
 }
 
 Encoder::~Encoder()
@@ -36,6 +37,13 @@ int Encoder::get_count()
 double Encoder::get_rev()
 {
     return (double)get_count() / (double)cpr;
+}
+
+double Encoder::get_rpm()
+{
+    double rps = get_rev() / (double)(millis()-prev_time);
+    prev_time = millis();
+    return rps * 60000.0;
 }
 
 void Encoder::encoderUpdate()

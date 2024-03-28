@@ -2,6 +2,7 @@
 
 #include <ros.h>
 #include <std_msgs/Int16.h>
+#include <std_msgs/Float32.h>
 
 #include "motor.h"
 #include "encoder.h"
@@ -32,10 +33,10 @@ Encoder encoder2(ENC2A, ENC2B, CPR, false);
 Encoder encoder3(ENC3A, ENC3B, CPR, false);
 Encoder encoder4(ENC4A, ENC4B, CPR, false);
 
-std_msgs::Int16 enc1;
-std_msgs::Int16 enc2;
-std_msgs::Int16 enc3;
-std_msgs::Int16 enc4;
+std_msgs::Float32 enc1;
+std_msgs::Float32 enc2;
+std_msgs::Float32 enc3;
+std_msgs::Float32 enc4;
 
 ros::Publisher pub1("enc1", &enc1);
 ros::Publisher pub2("enc2", &enc2);
@@ -91,10 +92,10 @@ void loop()
 
 void send_encoder_data()
 {
-  enc1.data = encoder1.get_count();
-  enc2.data = encoder2.get_count();
-  enc3.data = encoder3.get_count();
-  enc4.data = encoder4.get_count();
+  enc1.data = encoder1.get_rpm();
+  enc2.data = encoder2.get_rpm();
+  enc3.data = encoder3.get_rpm();
+  enc4.data = encoder4.get_rpm();
   pub1.publish(&enc1);
   pub2.publish(&enc2);
   pub3.publish(&enc3);
