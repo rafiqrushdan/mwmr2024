@@ -28,7 +28,7 @@ sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main
 
 
 
-If you want to install the VS Code in the **Raspberry Pi** , run the command below:
+If you want to install the VS Code in the **Raspberry Pi**, run the command below:
 
 
 `````
@@ -55,6 +55,15 @@ Motor | RPWM | LPWM | Encoder
 | Motor 4 |32 |35 |5,18
 
 *Connect all the **L_EN** and **R_EN** pin with the **5V pins** to the microcontroller.*
+
+### IMU Pins Configuration
+This project uses ![ICM 20948](https://www.adafruit.com/product/4554) because the library is more fully established and cheaper than the other IMUs eg; MPU 9250, and MPU 6050. Some of the MPUs have fake magnetometers and inaccurate readings.
+
+-SCL = pin 22
+-SDA = pin 21
+
+
+
 
 
 
