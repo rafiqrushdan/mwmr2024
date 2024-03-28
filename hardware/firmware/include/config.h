@@ -15,3 +15,5 @@
 #define ENC3B 17
 #define ENC4A 5
 #define ENC4B 18
+
+#define CPR 120
