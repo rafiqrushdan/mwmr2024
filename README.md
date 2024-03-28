@@ -40,7 +40,7 @@ sudo apt install ./code_arm64.deb
 
 All the pins in connected with **EPS32 DevKit V1 38 Pins** please refer to the picture below:
 
-![fyp2_schematic_diagram.drawio.png]
+![Lower Control](fyp2_schematic_diagram.drawio.png)
 
 
 ### Motor Pins Configuration
