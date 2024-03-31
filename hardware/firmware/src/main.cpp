@@ -10,12 +10,17 @@
 #include "config.h"
 
 ros::NodeHandle nh;
+ros::init(argc, argv, "controller_node");
 
-  /////////////PID///////////////
+
+/////////////PID///////////////
   #include <PID_v1.h>
   //Define Variables we'll be connecting to
-double Setpoint, Input, Output;
+
 double Setpoint1, Input1, Output1;
+double Setpoint2, Input2, Output2;
+double Setpoint3, Input3, Output3;
+double Setpoint4, Input4, Output4;
 
 //Specify the links and initial tuning parameters
 double Kp1=2, Ki1=0, Kd1=0;
@@ -24,9 +29,9 @@ double Kp3=32, Ki3=5, Kd3=1;
 double Kp4=2, Ki4=5, Kd4=1;
 
 PID motor1_PID(&Input1, &Output1, &Setpoint1, Kp1, Ki1, Kd1, DIRECT);
-PID motor2_PID(&Input, &Output, &Setpoint, Kp2, Ki2, Kd2, DIRECT);
-PID motor3_PID(&Input, &Output, &Setpoint, Kp3, Ki3, Kd3, DIRECT);
-PID motor4_PID(&Input, &Output, &Setpoint, Kp4, Ki4, Kd4, DIRECT);
+PID motor2_PID(&Input, &Output, &Setpoint2, Kp2, Ki2, Kd2, DIRECT);
+PID motor3_PID(&Input, &Output, &Setpoint3, Kp3, Ki3, Kd3, DIRECT);
+PID motor4_PID(&Input, &Output, &Setpoint4, Kp4, Ki4, Kd4, DIRECT);
 
 
 
@@ -64,10 +69,15 @@ ros::Publisher pub2("enc2", &enc2);
 ros::Publisher pub3("enc3", &enc3);
 ros::Publisher pub4("enc4", &enc4);
 
+//declare the function protoype
 void encoder1Update();
 void encoder2Update();
 void encoder3Update();
 void encoder4Update();
+
+void PIDcallback();
+void computePID();
+
 
 void send_encoder_data();
 unsigned long prev_time;
@@ -85,6 +95,9 @@ void setup()
   nh.advertise(pub2);
   nh.advertise(pub3);
   nh.advertise(pub4);
+
+  PIDcallback();
+
 
   delay(100);
 
@@ -126,10 +139,9 @@ void loop()
 
   //analogWrite(MOTOR1A, Output);
 
+  computePID();
 
-  Input1=encoder1.get_rpm();
-  motor1_PID.Compute();
-  motor1.setSpeed(Output1);
+
 }
 
 void send_encoder_data()
@@ -151,28 +163,21 @@ void motor1_callback(const std_msgs::Int16 &speed)
 
 void motor2_callback(const std_msgs::Int16 &speed)
 {
-  Setpoint=speed.data;
-  Input=encoder2.get_rpm();
-  motor2_PID.Compute();
-  motor2.setSpeed(Output);
+  Setpoint2=speed.data;
+ 
 }
 
 void motor3_callback(const std_msgs::Int16 &speed)
 {
-  Setpoint=speed.data;
-  Input=encoder3.get_rpm();
-  motor3_PID.Compute();
-  motor3.setSpeed(Output);
-  
+  Setpoint3=speed.data;
+
 }
 
 void motor4_callback(const std_msgs::Int16 &speed)
 {
 
-  Setpoint=speed.data;
-  Input=encoder4.get_rpm();
-  motor4_PID.Compute();
-  motor4.setSpeed(Output);
+  Setpoint4=speed.data;
+
 }
 
 void encoder1Update()
@@ -195,3 +200,40 @@ void encoder4Update()
   encoder4.encoderUpdate();
 }
 
+  void PIDcallback() //this function will handle the callback of PID params
+  {
+    nh.param("controller/Kp1", Kp1, 2.1);
+    nh.param("controller/Ki1", Ki1, 0.8);
+    nh.param("controller/Kd1", Kd1, 0.5);
+
+    nh.param("controller/Kp2", Kp2, 2.0);
+    nh.param("controller/Ki2", Ki2, 5.0);
+    nh.param("controller/Kd2", Kd2, 1.0);
+
+    nh.param("controller/Kp3", Kp3, 32.0);
+    nh.param("controller/Ki3", Ki3, 5.0);
+    nh.param("controller/Kd3", Kd3, 1.0);
+
+    nh.param("controller/Kp4", Kp4, 2.0);
+    nh.param("controller/Ki4", Ki4, 5.0);
+    nh.param("controller/Kd4", Kd4, 1.0);
+  }
+
+  void computePID() //this function will compute all the PID
+  {
+  Input1=encoder1.get_rpm();
+  motor1_PID.Compute();
+  motor1.setSpeed(Output1);  
+
+  Input2=encoder2.get_rpm();
+  motor2_PID.Compute();
+  motor2.setSpeed(Output2);
+
+  Input3=encoder3.get_rpm();
+  motor3_PID.Compute();
+  motor3.setSpeed(Output3);
+
+  Input4=encoder4.get_rpm();
+  motor4_PID.Compute();
+  motor4.setSpeed(Output4);
+  }
