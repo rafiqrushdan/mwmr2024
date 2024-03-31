@@ -36,6 +36,13 @@ curl -L https://aka.ms/linux-arm64-deb > code_arm64.deb
 sudo apt install ./code_arm64.deb
 ``````
 
+It is advisable to download [Terminator](https://www.howtoforge.com/how-to-install-and-use-terminator-on-ubuntu-20-04/) apps that can help to split the terminal.
+`````
+sudo apt-get update
+sudo apt-get install terminator
+`````
+
+
 ## Hardware Configuration
 
 All the pins in connected with **EPS32 DevKit V1 38 Pins** please refer to the picture below:
@@ -61,6 +68,32 @@ This project uses [ICM 20948](https://www.adafruit.com/product/4554) because the
 
 -SCL = pin 22
 -SDA = pin 21
+
+## Testing Prompt
+
+This prompt will be utilize in the testing part where u can test the each motor and calibrate it with PID in rqt.
+
+1. Activate the ros 
+`````
+roscore
+`````
+2. Uploading the code to the ESP32.Make sure there is no error when uploading the code.If there is error try to unplug the esp32 from the expansion and attach it back after uploading it.
+
+`````
+pio run --target upload
+`````
+
+3. Connecting the nodes in ros. Make sure you use the correct port.
+``````
+rosrun rosserial_python serial_node.py /dev/ttyUSB0
+``````
+
+4.Open rqt to see tune the motor 
+````
+rqt
+`````
+
+
 
 
 
