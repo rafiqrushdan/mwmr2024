@@ -29,9 +29,9 @@ double Kp3=32, Ki3=5, Kd3=1;
 double Kp4=2, Ki4=5, Kd4=1;
 
 PID motor1_PID(&Input1, &Output1, &Setpoint1, Kp1, Ki1, Kd1, DIRECT);
-PID motor2_PID(&Input, &Output, &Setpoint2, Kp2, Ki2, Kd2, DIRECT);
-PID motor3_PID(&Input, &Output, &Setpoint3, Kp3, Ki3, Kd3, DIRECT);
-PID motor4_PID(&Input, &Output, &Setpoint4, Kp4, Ki4, Kd4, DIRECT);
+PID motor2_PID(&Input2, &Output2, &Setpoint2, Kp2, Ki2, Kd2, DIRECT);
+PID motor3_PID(&Input3, &Output3, &Setpoint3, Kp3, Ki3, Kd3, DIRECT);
+PID motor4_PID(&Input4, &Output4, &Setpoint4, Kp4, Ki4, Kd4, DIRECT);
 
 
 
