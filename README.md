@@ -49,10 +49,10 @@ This project use  [IG42e-24K](https://my.cytron.io/p-12v-248rpm-10kgfcm-planetar
 
 Motor | RPWM | LPWM | Encoder 
 :----------: | :----: | :----------:| :----------: 
-| Motor 1 |12 |13 |15,2
-| Motor 2 |27|28 |0,4
+| Motor 1 |12 |13 |4,0
+| Motor 2 |27|28 |15,14
 | Motor 3 |33 |25 |16,17
-| Motor 4 |32 |35 |5,18
+| Motor 4 |32 |35 |18,5
 
 *Connect all the **L_EN** and **R_EN** pin with the **5V pins** to the microcontroller.*
 
