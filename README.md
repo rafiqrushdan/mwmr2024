@@ -75,6 +75,7 @@ This prompt will be utilize in the testing part where u can test the each motor 
 
 1. Activate the ros 
 `````
+source /opt/ros/noetic/setup.bash
 roscore
 `````
 2. Uploading the code to the ESP32.Make sure there is no error when uploading the code.If there is error try to unplug the esp32 from the expansion and attach it back after uploading it.
@@ -92,7 +93,10 @@ rosrun rosserial_python serial_node.py /dev/ttyUSB0
 ````
 rqt
 `````
+5. To move the motor based on rpm. Type this code and change the number eg: ``100`` according to you liking.
+````
 
+```
 
 
 
