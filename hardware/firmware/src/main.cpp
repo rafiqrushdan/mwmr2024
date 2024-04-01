@@ -3,7 +3,7 @@
 #include <ros.h>
 #include <std_msgs/Int16.h>
 #include <std_msgs/Float32.h>
-
+#include <std_msgs/String.h>
 #include "motor.h"
 #include "encoder.h"
 
@@ -47,7 +47,9 @@ void motor1_callback(const std_msgs::Int16 &speed);
 void motor2_callback(const std_msgs::Int16 &speed);
 void motor3_callback(const std_msgs::Int16 &speed);
 void motor4_callback(const std_msgs::Int16 &speed);
+void pid_callback(const std_msgs::String &pids);
 
+ros::Subscriber<std_msgs::String> subPid("pid",&pid_callback);
 ros::Subscriber<std_msgs::Int16> sub1("motor1", &motor1_callback);
 ros::Subscriber<std_msgs::Int16> sub2("motor2", &motor2_callback);
 ros::Subscriber<std_msgs::Int16> sub3("motor3", &motor3_callback);
@@ -177,6 +179,10 @@ void motor4_callback(const std_msgs::Int16 &speed)
 {
 
   Setpoint4=speed.data;
+
+}
+
+void pid_callback(const std_msgs::String &pids){
 
 }
 
