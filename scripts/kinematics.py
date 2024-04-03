@@ -23,9 +23,9 @@ class Kinematics:
     x, y, theta_dot = 0, 0, 0
     w1, w2, w3, w4 = 0, 0, 0, 0
 
-    # target_angle: float = 0
-    # target_x: float = 0
-    # target_y: float = 0
+    target_angle: float = 0
+    target_x: float = 0
+    target_y: float = 0
 
     PID_angle = PID(kp=20000,
                     ki=1,
@@ -140,10 +140,10 @@ if __name__ == '__main__':
     rate = rospy.Rate(50)
     while not rospy.is_shutdown():
         kinematics.update()
-        pub1.publish(Int16(int(clamp(kinematics.w1, -32768, 32767))))
-        pub2.publish(Int16(int(clamp(kinematics.w2, -32768, 32767))))
-        pub3.publish(Int16(int(clamp(kinematics.w3, -32768, 32767))))
-        pub4.publish(Int16(int(clamp(kinematics.w4, -32768, 32767))))
+        pub1.publish(Int16(int(clamp(kinematics.w1, -248, 248)))) #range the motorspeed accordign max pwm until min pwm
+        pub2.publish(Int16(int(clamp(kinematics.w2, -248, 248))))
+        pub3.publish(Int16(int(clamp(kinematics.w3, -248, 248))))
+        pub4.publish(Int16(int(clamp(kinematics.w4, -248, 248))))
         rate.sleep()
         print('\r',
               f'{kinematics.w1:6.0f}',
