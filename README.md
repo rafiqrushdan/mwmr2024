@@ -89,14 +89,14 @@ pio run --target upload
 rosrun rosserial_python serial_node.py /dev/ttyUSB0
 ``````
 
-4.Open rqt to see tune the motor 
+4.Open rqt to see tune the motor for the PID.
 ````
 rqt
 `````
-5. To move the motor based on rpm. Type this code and change the number eg: ``100`` according to you liking.
+5. To move the motor based on rpm. Type this code and change the number eg: ``100`` or ``motor1`` according to you liking.Run ``rostopic list`` if you want to know the available list of rostopic.
 ````
-
-```
+rostopic pub /motor1 std_msgs/Int16 "data: 100" 
+````
 
 
 

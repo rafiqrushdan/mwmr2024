@@ -9,6 +9,9 @@
 
 #include "config.h"
 
+#include <geometry_msgs/Pose.h>
+#include <sensor_msgs/Imu.h>
+
 ros::NodeHandle nh;
 // ros::init(argc, argv, "controller_node");
 
@@ -23,9 +26,9 @@ double Setpoint4, Input4, Output4;
 
 // Specify the links and initial tuning parameters
 double Kp1 = 1, Ki1 = 0, Kd1 = 0;
-double Kp2 = 2, Ki2 = 5, Kd2 = 1;
-double Kp3 = 3, Ki3 = 5, Kd3 = 1;
-double Kp4 = 2, Ki4 = 5, Kd4 = 1;
+double Kp2 = 1, Ki2 = 0, Kd2 = 0;
+double Kp3 = 1, Ki3 = 0, Kd3 = 0;
+double Kp4 = 1, Ki4 = 0, Kd4 = 0;
 
 PID motor1_PID(&Input1, &Output1, &Setpoint1, Kp1, Ki1, Kd1, DIRECT);
 PID motor2_PID(&Input2, &Output2, &Setpoint2, Kp2, Ki2, Kd2, DIRECT);
@@ -64,11 +67,20 @@ ros::Publisher pub2("enc2", &enc2);
 ros::Publisher pub3("enc3", &enc3);
 ros::Publisher pub4("enc4", &enc4);
 
+
+////////// IMU ///////////
+Adafruit_ICM20948 icm20948;
+sensor_msgs::Imu imu_data;
+ros::Publisher pub5("/imu/data", &imu_data);
+
+
 // declare the function protoype
 void encoder1Update();
 void encoder2Update();
 void encoder3Update();
 void encoder4Update();
+void send_imu_data();
+
 
 //void PIDcallback();
 //void computePID();
@@ -145,6 +157,8 @@ void loop()
   Input4 =enc4.data;
   motor4_PID.Compute();
   motor4.setSpeed(Output4);
+
+  send_imu_data();
 }
 
 void send_encoder_data()
@@ -201,6 +215,31 @@ void encoder4Update()
 }
 
 
+void send_imu_data()
+{
+    sensors_event_t accel, gyro, mag;
+    icm20948.getEvent(&accel, &gyro, &mag);
 
+    imu::Vector<3> acc;
+    acc.x() = accel.acceleration.x;
+    acc.y() = accel.acceleration.y;
+    acc.z() = accel.acceleration.z;
+
+    imu::Quaternion quat;
+    quat.w() = 1.0; // Default value for the quaternion's scalar component
+    quat.x() = gyro.gyro.x;
+    quat.y() = gyro.gyro.y;
+    quat.z() = gyro.gyro.z;
+
+    imu_data.linear_acceleration.x = acc.x();
+    imu_data.linear_acceleration.y = acc.y();
+    imu_data.linear_acceleration.z = acc.z();
+    imu_data.orientation.w = quat.w();
+    imu_data.orientation.x = quat.x();
+    imu_data.orientation.y = quat.y();
+    imu_data.orientation.z = quat.z();
+
+    pub1.publish(&imu_data);
+}
 
 
