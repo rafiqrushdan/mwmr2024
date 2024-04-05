@@ -18,6 +18,9 @@
 #include <Adafruit_ICM20948.h>
 #include <Adafruit_Sensor.h>
 #include <Wire.h>
+#include <Adafruit_BusIO_Register.h>
+
+
 
 ros::NodeHandle nh;
 
@@ -31,10 +34,10 @@ double Setpoint3, Input3, Output3;
 double Setpoint4, Input4, Output4;
 
 // Specify the links and initial tuning parameters
-double Kp1 = 1, Ki1 = 0, Kd1 = 0;
-double Kp2 = 1, Ki2 = 0, Kd2 = 0;
-double Kp3 = 1, Ki3 = 0, Kd3 = 0;
-double Kp4 = 1, Ki4 = 0, Kd4 = 0;
+double Kp1 = 1.32, Ki1 = 0.22, Kd1 = 0.012;
+double Kp2 = 1.32, Ki2 = 0.22, Kd2 = 0.012;
+double Kp3 = 1.32, Ki3 = 0.22, Kd3 = 0.012;
+double Kp4 = 1.32, Ki4 = 0.22, Kd4 = 0.012;
 
 PID motor1_PID(&Input1, &Output1, &Setpoint1, Kp1, Ki1, Kd1, DIRECT);
 PID motor2_PID(&Input2, &Output2, &Setpoint2, Kp2, Ki2, Kd2, DIRECT);
@@ -73,6 +76,9 @@ ros::Publisher pub2("enc2", &enc2);
 ros::Publisher pub3("enc3", &enc3);
 ros::Publisher pub4("enc4", &enc4);
 
+// geometry_msgs::Pose pose;
+// ros::Publisher pub6("mwmr_pose", &pose);
+
 ////////// IMU ///////////
 Adafruit_ICM20948 icm20948;
 
@@ -86,6 +92,8 @@ void encoder1Update();
 void encoder2Update();
 void encoder3Update();
 void encoder4Update();
+// void send_pose_data();
+
 void send_imu_data();
 
 // void PIDcallback();
@@ -107,6 +115,11 @@ void setup()
   nh.advertise(pub2);
   nh.advertise(pub3);
   nh.advertise(pub4);
+
+  //imu
+  nh.advertise(pub5);
+  // nh.advertise(pub6)
+
 
   // PIDcallback();
 
@@ -168,6 +181,8 @@ void loop()
   motor4.setSpeed(Output4);
 
   send_imu_data();
+
+  
 }
 
 void send_encoder_data()
@@ -293,3 +308,4 @@ void send_imu_data()
 
   pub5.publish(&imu_data);
 }
+

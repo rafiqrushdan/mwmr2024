@@ -1,0 +1,5 @@
+<launch>
+   <node name="mwmr" pkg="rosserial_python" type="serial_node.py" args="/dev/ttyUSB0" output="screen" />   
+    <node pkg="test_movemotor" type="test_move.py" name="kinematic_node" output="screen" />
+ 
+</launch>

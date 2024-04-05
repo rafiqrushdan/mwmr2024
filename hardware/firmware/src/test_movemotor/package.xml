@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>test_movemotor</name>
+  <version>0.0.0</version>
+  <description>The test_movemotor package</description>
+  <maintainer email="rafiq@todo.todo">rafiq</maintainer>
+  <license>TODO</license>
+  <author email="jane.doe@example.com">Jane Doe</author>
+
+  
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>rospy</build_depend>
+  <build_export_depend>rospy</build_export_depend>
+  <exec_depend>rospy</exec_depend>
+
+
+  <export>
+
+
+  </export>
+</package>
