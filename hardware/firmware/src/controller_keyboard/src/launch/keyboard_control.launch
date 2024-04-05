@@ -1,5 +1,4 @@
 <launch>
-    <node pkg="controller_keyboard" type="kinematics.py" name="kinematic_node" output="screen"><node>
-    <node pkg="controller_keyboard" type="teleop.py" name="teleop_node" output="screen"><node>
-<launch>
-
+    <node pkg="controller_keyboard" type="kinematics.py" name="kinematic_node" output="screen" />
+    <node pkg="controller_keyboard" type="teleop.py" name="teleop_node" output="screen" />
+</launch>
