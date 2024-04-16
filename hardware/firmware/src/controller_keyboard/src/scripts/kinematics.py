@@ -8,7 +8,65 @@ import numpy as np
 from math import sin, cos, pi, radians
 from dataclasses import dataclass
 # from utils import *
+from dataclasses import dataclass
+import time
 
+
+@dataclass
+class Position:
+    x: float
+    y: float
+
+@dataclass
+class PID:
+    kp: float
+    ki: float
+    kd: float
+    value: float = 0
+    target: float = 0
+    _i: float = 0
+    error_prev: float = 0
+    time_prev: float = time.time()
+
+    @property
+    def time_diff(self):
+        return time.time() - self.time_prev
+
+    @property
+    def error(self):
+        return self.target - self.value
+
+    @property
+    def p(self):
+        return self.kp * self.error
+
+    @property
+    def i(self):
+        self._i = self._i + self.ki * self.error
+        return self._i
+
+    @property
+    def d(self):
+        return self.kd*((self.error - self.error_prev)/self.time_diff)
+
+    @property
+    def total(self):
+        pid = self.p + self.i + self.d
+        self.error_prev = self.error
+        self.time_prev = time.time()
+        return pid
+
+
+def map_value(x: float,  in_min: float,  in_max: float,  out_min: float,  out_max: float):
+    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
+
+
+def lerp(a: float, b: float, t: float) -> float:
+    return a + (b - a) * t
+
+
+def clamp(num, min_value, max_value):
+    return max(min(num, max_value), min_value)
 
 @dataclass
 class Kinematics:
@@ -78,9 +136,9 @@ class Kinematics:
     #     self.y = -self.PID_y.total
 
     def update(self):
-        self.PID_theta()
-        if not self.manual_mode:
-            self.PID()
+        # self.PID_theta()
+        # if not self.manual_mode:
+        #     self.PID()
         self.kinematics()
 
     def position_callback(self, pose: Pose):
@@ -140,10 +198,10 @@ if __name__ == '__main__':
     rate = rospy.Rate(50)
     while not rospy.is_shutdown():
         kinematics.update()
-        pub1.publish(Int16(int(clamp(kinematics.w1, -248, 248)))) #range the motorspeed accordign max pwm until min pwm
-        pub2.publish(Int16(int(clamp(kinematics.w2, -248, 248))))
-        pub3.publish(Int16(int(clamp(kinematics.w3, -248, 248))))
-        pub4.publish(Int16(int(clamp(kinematics.w4, -248, 248))))
+        pub1.publish(Int16(int(clamp(kinematics.w1, -100, 100)))) #range the motorspeed accordign max pwm until min pwm
+        pub2.publish(Int16(int(clamp(kinematics.w2, -100, 100))))
+        pub3.publish(Int16(int(clamp(kinematics.w3, -100, 100))))
+        pub4.publish(Int16(int(clamp(kinematics.w4, -100, 100))))
         rate.sleep()
         print('\r',
               f'{kinematics.w1:6.0f}',

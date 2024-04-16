@@ -34,10 +34,10 @@ double Setpoint3, Input3, Output3;
 double Setpoint4, Input4, Output4;
 
 // Specify the links and initial tuning parameters
-double Kp1 = 1.32, Ki1 = 0.22, Kd1 = 0.012;
-double Kp2 = 1.32, Ki2 = 0.22, Kd2 = 0.012;
-double Kp3 = 1.32, Ki3 = 0.22, Kd3 = 0.012;
-double Kp4 = 1.32, Ki4 = 0.22, Kd4 = 0.012;
+double Kp1 = 1.32, Ki1 = 0, Kd1 = 0.012;
+double Kp2 = 1.32, Ki2 = 0, Kd2 = 0.012;
+double Kp3 = 1.32, Ki3 = 0, Kd3 = 0.012;
+double Kp4 = 1.32, Ki4 = 0, Kd4 = 0.012;
 
 PID motor1_PID(&Input1, &Output1, &Setpoint1, Kp1, Ki1, Kd1, DIRECT);
 PID motor2_PID(&Input2, &Output2, &Setpoint2, Kp2, Ki2, Kd2, DIRECT);
