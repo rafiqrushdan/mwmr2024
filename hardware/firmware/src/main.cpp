@@ -28,16 +28,17 @@ ros::NodeHandle nh;
 #include <PID_v1.h>
 // Define Variables we'll be connecting to
 
-double Setpoint1, Input1, Output1;
-double Setpoint2, Input2, Output2;
-double Setpoint3, Input3, Output3;
-double Setpoint4, Input4, Output4;
+double Setpoint1, Input1, Output1, Output11;
+double Setpoint2, Input2, Output2, Output22;
+double Setpoint3, Input3, Output3, Output33;
+double Setpoint4, Input4, Output4, Output44;
+
 
 // Specify the links and initial tuning parameters
-double Kp1 = 1.32, Ki1 = 0, Kd1 = 0.012;
-double Kp2 = 1.32, Ki2 = 0, Kd2 = 0.012;
-double Kp3 = 1.32, Ki3 = 0, Kd3 = 0.012;
-double Kp4 = 1.32, Ki4 = 0, Kd4 = 0.012;
+double Kp1 = 1, Ki1 = 0, Kd1 = 0;
+double Kp2 = 1.5, Ki2 = 0, Kd2 = 0;
+double Kp3 = 1.5, Ki3 = 0, Kd3 = 0;
+double Kp4 = 1.5, Ki4 = 0, Kd4 = 0;
 
 PID motor1_PID(&Input1, &Output1, &Setpoint1, Kp1, Ki1, Kd1, DIRECT);
 PID motor2_PID(&Input2, &Output2, &Setpoint2, Kp2, Ki2, Kd2, DIRECT);
@@ -164,21 +165,51 @@ void loop()
 
   // analogWrite(MOTOR1A, Output);
 
+  
+ 
   Input1 = enc1.data;
-  motor1_PID.Compute();
-  motor1.setSpeed(Output1);
+  motor1_PID.Compute(); 
+  Output11=Output1+100;
+
+  if (Output1==0){
+    Output11=0;
+  }
+
+  
+  motor1.setSpeed(Output11);
+
 
   Input2 = enc2.data;
   motor2_PID.Compute();
-  motor2.setSpeed(Output2);
+    Output22=Output2+50;
+  
+  // if (Output2==0){
+  //   Output22=0;
+  // }
+
+  
+  motor2.setSpeed(Output22);
 
   Input3 = enc3.data;
   motor3_PID.Compute();
-  motor3.setSpeed(Output3);
+  Output33=Output3+50;
+  
+  // if (Output3==0){
+  //   Output33=0;
+  // }
+  
+ 
+  motor3.setSpeed(Output33);
 
   Input4 = enc4.data;
   motor4_PID.Compute();
-  motor4.setSpeed(Output4);
+  Output44=Output4+50;
+  //  if (Output4==0){
+  //   Output44=0;
+  // }
+  motor4.setSpeed(Output44);
+
+  
 
   send_imu_data();
 

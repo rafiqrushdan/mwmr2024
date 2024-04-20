@@ -28,15 +28,15 @@ def move_motors():
     while not rospy.is_shutdown():
         key = get_key()
         if key == 'q':
-            motor1_pub.publish(60)
-            motor2_pub.publish(60)
-            motor3_pub.publish(60)
-            motor4_pub.publish(60)
+            motor1_pub.publish(80)
+            motor2_pub.publish(80)
+            motor3_pub.publish(80)
+            motor4_pub.publish(80)
         elif key == 'e':
-            motor1_pub.publish(0)
-            motor2_pub.publish(0)
-            motor3_pub.publish(0)
-            motor4_pub.publish(0)
+            motor1_pub.publish(-50)
+            motor2_pub.publish(-50)
+            motor3_pub.publish(-50)
+            motor4_pub.publish(-50)
         rate.sleep()
 
 if __name__ == '__main__':
