@@ -35,10 +35,10 @@ double Setpoint4, Input4, Output4, Output44;
 
 
 // Specify the links and initial tuning parameters
-double Kp1 = 1, Ki1 = 0, Kd1 = 0;
-double Kp2 = 1.5, Ki2 = 0, Kd2 = 0;
-double Kp3 = 1.5, Ki3 = 0, Kd3 = 0;
-double Kp4 = 1.5, Ki4 = 0, Kd4 = 0;
+double Kp1 = 1.32, Ki1 = 0.22, Kd1 = 0.012;
+double Kp2 = 1.32, Ki2 = 0.22, Kd2 = 0.012;
+double Kp3 = 1.32, Ki3 = 0.22, Kd3 = 0.012;
+double Kp4 = 1.32, Ki4 = 0.22, Kd4 = 0.012;
 
 PID motor1_PID(&Input1, &Output1, &Setpoint1, Kp1, Ki1, Kd1, DIRECT);
 PID motor2_PID(&Input2, &Output2, &Setpoint2, Kp2, Ki2, Kd2, DIRECT);
@@ -169,45 +169,48 @@ void loop()
  
   Input1 = enc1.data;
   motor1_PID.Compute(); 
-  Output11=Output1+100;
-
-  if (Output1==0){
-    Output11=0;
-  }
-
-  
-  motor1.setSpeed(Output11);
+  motor1.setSpeed(Output1);
 
 
   Input2 = enc2.data;
   motor2_PID.Compute();
-    Output22=Output2+50;
-  
-  // if (Output2==0){
-  //   Output22=0;
-  // }
-
-  
-  motor2.setSpeed(Output22);
+  motor2.setSpeed(Output2);
 
   Input3 = enc3.data;
   motor3_PID.Compute();
-  Output33=Output3+50;
-  
-  // if (Output3==0){
-  //   Output33=0;
-  // }
-  
- 
-  motor3.setSpeed(Output33);
+  motor3.setSpeed(Output3);
 
   Input4 = enc4.data;
   motor4_PID.Compute();
-  Output44=Output4+50;
-  //  if (Output4==0){
-  //   Output44=0;
-  // }
-  motor4.setSpeed(Output44);
+  motor4.setSpeed(Output4);
+
+  
+  if (Setpoint1==0)
+  {
+    Kp1=1;
+    Ki1,Kd1=0;
+  }
+  if (Setpoint2==0)
+  {
+    Kp2=1;
+    Ki2,Kd2=0;
+  }
+    if (Setpoint3==0)
+  {
+    K3=1;
+    Ki3,Kd3=0;
+  }
+    if (Setpoint4==0)
+  {
+    Kp4=1;
+    Ki4,Kd4=0;
+  }
+  else{
+       Kp1 = 1.32, Ki1 = 0.22, Kd1 = 0.012;
+       Kp2 = 1.32, Ki2 = 0.22, Kd2 = 0.012;
+       Kp3 = 1.32, Ki3 = 0.22, Kd3 = 0.012;
+       Kp4 = 1.32, Ki4 = 0.22, Kd4 = 0.012;
+  }
 
   
 
