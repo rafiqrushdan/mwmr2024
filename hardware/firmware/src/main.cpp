@@ -20,8 +20,6 @@
 #include <Wire.h>
 #include <Adafruit_BusIO_Register.h>
 
-
-
 ros::NodeHandle nh;
 
 /////////////PID///////////////
@@ -33,12 +31,11 @@ double Setpoint2, Input2, Output2, Output22;
 double Setpoint3, Input3, Output3, Output33;
 double Setpoint4, Input4, Output4, Output44;
 
-
 // Specify the links and initial tuning parameters
-double Kp1 = 1.32, Ki1 = 0.22, Kd1 = 0.012;
-double Kp2 = 1.32, Ki2 = 0.22, Kd2 = 0.012;
-double Kp3 = 1.32, Ki3 = 0.22, Kd3 = 0.012;
-double Kp4 = 1.32, Ki4 = 0.22, Kd4 = 0.012;
+double Kp1 = 1.32, Ki1 = 0, Kd1 = 0.012;
+double Kp2 = 1.32, Ki2 = 0, Kd2 = 0.012;
+double Kp3 = 1.32, Ki3 = 0, Kd3 = 0.012;
+double Kp4 = 1.32, Ki4 = 0, Kd4 = 0.012;
 
 PID motor1_PID(&Input1, &Output1, &Setpoint1, Kp1, Ki1, Kd1, DIRECT);
 PID motor2_PID(&Input2, &Output2, &Setpoint2, Kp2, Ki2, Kd2, DIRECT);
@@ -81,12 +78,12 @@ ros::Publisher pub4("enc4", &enc4);
 // ros::Publisher pub6("mwmr_pose", &pose);
 
 ////////// IMU ///////////
-Adafruit_ICM20948 icm20948;
-
-
+Adafruit_ICM20948 icm;
 
 sensor_msgs::Imu imu_data;
+std_msgs::Float32 heading_data;
 ros::Publisher pub5("/imu/data", &imu_data);
+ros::Publisher pub6("/heading", &heading_data);
 
 // declare the function protoype
 void encoder1Update();
@@ -117,10 +114,9 @@ void setup()
   nh.advertise(pub3);
   nh.advertise(pub4);
 
-  //imu
+  // imu
   nh.advertise(pub5);
-  // nh.advertise(pub6)
-
+  nh.advertise(pub6);
 
   // PIDcallback();
 
@@ -140,13 +136,20 @@ void setup()
   // Setpoint1=0;
 
   // turn the PID on
+  motor1_PID.SetOutputLimits(-255, 255);
+  motor2_PID.SetOutputLimits(-255, 255);
+  motor3_PID.SetOutputLimits(-255, 255);
+  motor4_PID.SetOutputLimits(-255, 255);
+
   motor1_PID.SetMode(AUTOMATIC);
   motor2_PID.SetMode(AUTOMATIC);
   motor3_PID.SetMode(AUTOMATIC);
   motor4_PID.SetMode(AUTOMATIC);
 
-
-
+  while(!icm.begin_I2C())
+  {
+    delay(1000);
+  }
 }
 
 void loop()
@@ -165,12 +168,9 @@ void loop()
 
   // analogWrite(MOTOR1A, Output);
 
-  
- 
   Input1 = enc1.data;
-  motor1_PID.Compute(); 
+  motor1_PID.Compute();
   motor1.setSpeed(Output1);
-
 
   Input2 = enc2.data;
   motor2_PID.Compute();
@@ -184,39 +184,9 @@ void loop()
   motor4_PID.Compute();
   motor4.setSpeed(Output4);
 
-  
-  if (Setpoint1==0)
-  {
-    Kp1=1;
-    Ki1,Kd1=0;
-  }
-  if (Setpoint2==0)
-  {
-    Kp2=1;
-    Ki2,Kd2=0;
-  }
-    if (Setpoint3==0)
-  {
-    K3=1;
-    Ki3,Kd3=0;
-  }
-    if (Setpoint4==0)
-  {
-    Kp4=1;
-    Ki4,Kd4=0;
-  }
-  else{
-       Kp1 = 1.32, Ki1 = 0.22, Kd1 = 0.012;
-       Kp2 = 1.32, Ki2 = 0.22, Kd2 = 0.012;
-       Kp3 = 1.32, Ki3 = 0.22, Kd3 = 0.012;
-       Kp4 = 1.32, Ki4 = 0.22, Kd4 = 0.012;
-  }
-
-  
+ 
 
   send_imu_data();
-
-  
 }
 
 void send_encoder_data()
@@ -274,8 +244,9 @@ void encoder4Update()
 
 void send_imu_data()
 {
-  sensors_event_t accel, gyro, mag;
-  icm20948.getEvent(&accel, &gyro, &mag);
+  sensors_event_t accel, gyro, mag, temp;
+  icm.getEvent(&accel, &gyro, &temp, &mag);
+  heading_data.data = atan2(mag.magnetic.y, mag.magnetic.x) * 180 / 3.142;
 
   // imu::Vector<3> acc;
   // acc.x() = accel.acceleration.x;
@@ -296,14 +267,14 @@ void send_imu_data()
   // imu_data.orientation.y = quat.y();
   // imu_data.orientation.z = quat.z();
 
-    // Calculate quaternion
+  // Calculate quaternion
   float ax = accel.acceleration.x;
   float ay = accel.acceleration.y;
   float az = accel.acceleration.z;
   float gx = gyro.gyro.x;
   float gy = gyro.gyro.y;
   float gz = gyro.gyro.z;
-  float qw = sqrt(1 + ax*ax + ay*ay + az*az) / 2.0;
+  float qw = sqrt(1 + ax * ax + ay * ay + az * az) / 2.0;
   float qx = (gy * az - gz * ay) / (4 * qw);
   float qy = (gz * ax - gx * az) / (4 * qw);
   float qz = (gx * ay - gy * ax) / (4 * qw);
@@ -341,5 +312,65 @@ void send_imu_data()
   // imu_data.orientation.z = quat_z;
 
   pub5.publish(&imu_data);
+  pub6.publish(&heading_data);
 }
 
+// #include <Arduino.h>
+// #include <math.h>
+// #include <Adafruit_ICM20X.h>
+// #include <Adafruit_ICM20948.h>
+// Adafruit_ICM20948 icm;
+// sensors_event_t accel, gyro, mag, temp;
+// void setup()
+// {
+//   Serial.begin(115200);
+//   // Try to initialize!
+//   if (!icm.begin_I2C())
+//   {
+//     // if (!icm.begin_SPI(ICM_CS)) {
+//     // if (!icm.begin_SPI(ICM_CS, ICM_SCK, ICM_MISO, ICM_MOSI)) {
+
+//     Serial.println("Failed to find ICM20948 chip");
+//     while (1)
+//     {
+//       delay(10);
+//     }
+//     // icm.setMagDataRate(AK09916_MAG_DATARATE_10_HZ);
+//     Serial.print("Magnetometer data rate set to: ");
+//     switch (icm.getMagDataRate())
+//     {
+//     case AK09916_MAG_DATARATE_SHUTDOWN:
+//       Serial.println("Shutdown");
+//       break;
+//     case AK09916_MAG_DATARATE_SINGLE:
+//       Serial.println("Single/One shot");
+//       break;
+//     case AK09916_MAG_DATARATE_10_HZ:
+//       Serial.println("10 Hz");
+//       break;
+//     case AK09916_MAG_DATARATE_20_HZ:
+//       Serial.println("20 Hz");
+//       break;
+//     case AK09916_MAG_DATARATE_50_HZ:
+//       Serial.println("50 Hz");
+//       break;
+//     case AK09916_MAG_DATARATE_100_HZ:
+//       Serial.println("100 Hz");
+//       break;
+//     }
+//     Serial.println();
+//   }
+// }
+
+// void loop()
+// {
+//   icm.getEvent(&accel, &gyro, &temp, &mag);
+//   Serial.print(atan2(mag.magnetic.y, mag.magnetic.x) * 180 / 3.142);
+//   Serial.print("\t\tMag X: ");
+//   Serial.print(mag.magnetic.x);
+//   Serial.print(" \tY: ");
+//   Serial.print(mag.magnetic.y);
+//   Serial.print(" \tZ: ");
+//   Serial.print(mag.magnetic.z);
+//   Serial.println(" uT");
+// }
