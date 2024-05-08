@@ -141,7 +141,7 @@ def shutdown_hook():
         pub.publish(Int16(0))
 
 def encoder_callback(msg: Float32, id: int):
-    encoder_values[id] = msg.data
+    encoder_values[id-1] = msg.data
         
 
 

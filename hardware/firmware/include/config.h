@@ -14,7 +14,7 @@
 #define ENC3A 16
 #define ENC3B 17
 #define ENC4A 18
-#define ENC4B 2
+#define ENC4B 5
 
 #define CPR 120
 #define ENC_DELAY 100ul

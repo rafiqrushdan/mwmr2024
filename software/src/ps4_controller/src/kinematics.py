@@ -111,10 +111,10 @@ class Kinematics:
         offset=0
 
 
-        array = [[sin(self.angle+(pi/4+offset)), -cos(self.angle+(pi/4+offset)), -10*cos(pi/4+offset)-15*sin(pi/4+offset)],
-                 [sin(self.angle+(3*pi/4+offset)), -cos(self.angle+(3*pi/4+offset)), -10*cos(3*pi/4+offset)+15*sin(3*pi/4+offset)],
-                 [sin(self.angle+(-pi/4+offset)), -cos(self.angle+(-pi/4+offset)), 10*cos(pi/4+offset)-15*sin(-pi/4+offset)],
-                 [sin(self.angle+(-3*pi/4+offset)), -cos(self.angle+(-3*pi/4+offset)), 10*cos(-3*pi/4+offset)+15*sin(-3*pi/4+offset)]]
+        array = [[sin(self.angle+(-pi/4+offset)), -cos(self.angle+(-pi/4+offset)), -10*cos(-pi/4+offset)-15*sin(-pi/4+offset)],
+                 [sin(self.angle+(pi/4+offset)), -cos(self.angle+(pi/4+offset)), -10*cos(pi/4+offset)+15*sin(pi/4+offset)],
+                 [sin(self.angle+(pi/4+offset)), -cos(self.angle+(pi/4+offset)), 10*cos(pi/4+offset)-15*sin(pi/4+offset)],
+                 [sin(self.angle+(-pi/4+offset)), -cos(self.angle+(-pi/4+offset)), 10*cos(-pi/4+offset)+15*sin(pi/4+offset)]]
         array = np.array(array)
         self.w1, self.w2, self.w3, self.w4 = \
             np.matmul(array, [self.x, self.y, self.theta_dot])
@@ -122,9 +122,9 @@ class Kinematics:
         # self.angle -= pi / 2
 
         self.w1=R*self.w1*sin(pi/4)
-        self.w2=R*self.w2*sin(3*pi/4)
-        self.w3=R*self.w3*sin(-pi/4)
-        self.w4=R*self.w4*sin(-3*pi/4)
+        self.w2=R*self.w2*sin(pi/4)
+        self.w3=R*self.w3*sin(pi/4)
+        self.w4=R*self.w4*sin(pi/4)
 
     def PID_theta(self):
         self.PID_angle.target = self.target_angle
