@@ -4,6 +4,8 @@
 #include <std_msgs/Int16.h>
 #include <std_msgs/Float32.h>
 #include <Adafruit_Sensor.h>
+#include "Encoders.h"
+
 
 #include "motor.h"
 #include "encoder.h"
@@ -57,6 +59,7 @@ ros::Subscriber<std_msgs::Int16> sub1("motor1", &motor1_callback);
 ros::Subscriber<std_msgs::Int16> sub2("motor2", &motor2_callback);
 ros::Subscriber<std_msgs::Int16> sub3("motor3", &motor3_callback);
 ros::Subscriber<std_msgs::Int16> sub4("motor4", &motor4_callback);
+ecam_msg::Encoders encoders_msg;
 
 ////////////// ENCODER //////////////
 Encoder encoder1(ENC1A, ENC1B, CPR, false);
@@ -74,8 +77,10 @@ ros::Publisher pub2("enc2", &enc2);
 ros::Publisher pub3("enc3", &enc3);
 ros::Publisher pub4("enc4", &enc4);
 
-// geometry_msgs::Pose pose;
-// ros::Publisher pub6("mwmr_pose", &pose);
+//Publisher for ecam_msg
+
+ros::Publisher encoders_pub("encoder", &encoders_msg);
+
 
 ////////// IMU ///////////
 Adafruit_ICM20948 icm;
@@ -102,6 +107,8 @@ unsigned long prev_time;
 
 void setup()
 {
+
+  
   nh.initNode();
   // motor
   nh.subscribe(sub1);
@@ -117,6 +124,9 @@ void setup()
   // imu
   nh.advertise(pub5);
   nh.advertise(pub6);
+
+  //encoder for mecanum package
+  nh.advertise(encoders_pub);
 
   // PIDcallback();
 
@@ -187,6 +197,14 @@ void loop()
  
 
   send_imu_data();
+
+
+//ecam_msg from encoder
+  encoders_msg.rear_left += encoder4.get_count();
+  encoders_msg.rear_right += encoder3.get_count();
+  encoders_msg.front_right +=encoder1.get_count();
+  encoders_msg.front_left +=encoder2.get_count();
+  encoders_pub.publish(&encoders_msg);
 }
 
 void send_encoder_data()
@@ -248,24 +266,6 @@ void send_imu_data()
   icm.getEvent(&accel, &gyro, &temp, &mag);
   heading_data.data = atan2(mag.magnetic.y, mag.magnetic.x) * 180 / 3.142;
 
-  // imu::Vector<3> acc;
-  // acc.x() = accel.acceleration.x;
-  // acc.y() = accel.acceleration.y;
-  // acc.z() = accel.acceleration.z;
-
-  // imu::Quaternion quat;
-  // quat.w() = 1.0; // Default value for the quaternion's scalar component
-  // quat.x() = gyro.gyro.x;
-  // quat.y() = gyro.gyro.y;
-  // quat.z() = gyro.gyro.z;
-
-  // imu_data.linear_acceleration.x = acc.x();
-  // imu_data.linear_acceleration.y = acc.y();
-  // imu_data.linear_acceleration.z = acc.z();
-  // imu_data.orientation.w = quat.w();
-  // imu_data.orientation.x = quat.x();
-  // imu_data.orientation.y = quat.y();
-  // imu_data.orientation.z = quat.z();
 
   // Calculate quaternion
   float ax = accel.acceleration.x;
@@ -290,87 +290,9 @@ void send_imu_data()
   imu_data.linear_acceleration.y = accel.acceleration.y;
   imu_data.linear_acceleration.z = accel.acceleration.z;
 
-  // icm20948.task();
-  // float quat_w, quat_x, quat_y, quat_z;
-  // if (icm20948.quat6DataIsReady())
-  // {
-  //   icm20948.readQuat6Data(&quat_w, &quat_x, &quat_y, &quat_z);
-  // }
-
-  // // Read acceleration data
-  // float accel_x, accel_y, accel_z;
-  // if (icm20948.accelDataIsReady())
-  // {
-  //   icm20948.readAccelData(&accel_x, &accel_y, &accel_z);
-  // }
-  // imu_data.linear_acceleration.x = accel_x;
-  // imu_data.linear_acceleration.y = accel_y;
-  // imu_data.linear_acceleration.z = accel_z;
-  // imu_data.orientation.w = quat_w;
-  // imu_data.orientation.x = quat_x;
-  // imu_data.orientation.y = quat_y;
-  // imu_data.orientation.z = quat_z;
-
   pub5.publish(&imu_data);
   pub6.publish(&heading_data);
+  
+  
 }
 
-// #include <Arduino.h>
-// #include <math.h>
-// #include <Adafruit_ICM20X.h>
-// #include <Adafruit_ICM20948.h>
-// Adafruit_ICM20948 icm;
-// sensors_event_t accel, gyro, mag, temp;
-// void setup()
-// {
-//   Serial.begin(115200);
-//   // Try to initialize!
-//   if (!icm.begin_I2C())
-//   {
-//     // if (!icm.begin_SPI(ICM_CS)) {
-//     // if (!icm.begin_SPI(ICM_CS, ICM_SCK, ICM_MISO, ICM_MOSI)) {
-
-//     Serial.println("Failed to find ICM20948 chip");
-//     while (1)
-//     {
-//       delay(10);
-//     }
-//     // icm.setMagDataRate(AK09916_MAG_DATARATE_10_HZ);
-//     Serial.print("Magnetometer data rate set to: ");
-//     switch (icm.getMagDataRate())
-//     {
-//     case AK09916_MAG_DATARATE_SHUTDOWN:
-//       Serial.println("Shutdown");
-//       break;
-//     case AK09916_MAG_DATARATE_SINGLE:
-//       Serial.println("Single/One shot");
-//       break;
-//     case AK09916_MAG_DATARATE_10_HZ:
-//       Serial.println("10 Hz");
-//       break;
-//     case AK09916_MAG_DATARATE_20_HZ:
-//       Serial.println("20 Hz");
-//       break;
-//     case AK09916_MAG_DATARATE_50_HZ:
-//       Serial.println("50 Hz");
-//       break;
-//     case AK09916_MAG_DATARATE_100_HZ:
-//       Serial.println("100 Hz");
-//       break;
-//     }
-//     Serial.println();
-//   }
-// }
-
-// void loop()
-// {
-//   icm.getEvent(&accel, &gyro, &temp, &mag);
-//   Serial.print(atan2(mag.magnetic.y, mag.magnetic.x) * 180 / 3.142);
-//   Serial.print("\t\tMag X: ");
-//   Serial.print(mag.magnetic.x);
-//   Serial.print(" \tY: ");
-//   Serial.print(mag.magnetic.y);
-//   Serial.print(" \tZ: ");
-//   Serial.print(mag.magnetic.z);
-//   Serial.println(" uT");
-// }
