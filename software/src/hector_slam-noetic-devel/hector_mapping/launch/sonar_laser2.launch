@@ -52,10 +52,8 @@
   </node>
   
   <!-- Parameters for Odometry -->
-  <arg name="model" default="$(find robot_description)/urdf/cortex.xacro"/>
-  <arg name="rvizconfig" default="$(find mecanum)/rviz/robot.rviz"/>
   <rosparam command="load" file="$(find mecanum)/param/mecanum.yaml"/>
-  <param name="robot_description" command="$(find xacro)/xacro --inorder $(arg model)"/>
+
   
   <!-- Encoder Odometry Node -->
   <node name="encoder_odom" pkg="mecanum" type="encoder_odom.py"/>

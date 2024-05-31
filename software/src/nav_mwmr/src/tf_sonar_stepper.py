@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 
 import rospy
+import tf2_ros
+import geometry_msgs.msg
+import tf_conversions
 from std_msgs.msg import Float64, UInt16
 from sensor_msgs.msg import LaserScan
 import time
@@ -11,6 +14,7 @@ index = count(step=1)  # Time counter
 
 pub_laser = rospy.Publisher("sonar_laser", LaserScan, queue_size=100)
 pub_servo = rospy.Publisher("servo", UInt16, queue_size=10)
+tf_broadcaster = tf2_ros.TransformBroadcaster()
 
 a = [0] * 360
 w1 = 0  # Define w1 as a global variable with initial value 0
@@ -25,6 +29,23 @@ def callback1(data):
         w = 0.01
     w1 = round(w, 3)
     print(w1)
+
+def publish_tf():
+    t = geometry_msgs.msg.TransformStamped()
+    
+    t.header.stamp = rospy.Time.now()
+    t.header.frame_id = "base_link"  # parent frame
+    t.child_frame_id = "sonar"  # child frame
+    t.transform.translation.x = 0.0
+    t.transform.translation.y = 0.0
+    t.transform.translation.z = 0.0
+    q = tf_conversions.transformations.quaternion_from_euler(0, 0, 0)
+    t.transform.rotation.x = q[0]
+    t.transform.rotation.y = q[1]
+    t.transform.rotation.z = q[2]
+    t.transform.rotation.w = q[3]
+
+    tf_broadcaster.sendTransform(t)
 
 scan_update_time = 0.22222  # Time interval for each data update
 publish_interval = 1  # Publish complete array every second
@@ -60,6 +81,9 @@ def laser():
                 laser.intensities = []
                 pub_laser.publish(laser)
                 last_publish_time = current_time  # Reset the publish time
+
+            # Publish TF transformation
+            publish_tf()
 
         r.sleep()
 
