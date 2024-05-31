@@ -85,9 +85,9 @@ class Kinematics:
     target_x: float = 0
     target_y: float = 0
 
-    PID_angle = PID(kp=20000,
-                    ki=1,
-                    kd=500,
+    PID_angle = PID(kp=0.6,
+                    ki=0,
+                    kd=0.5,
                     target=0)
     # PID_x = PID(kp=50,   //dont need becauase we have the encoder for each motor to compute
     #             ki=0,
@@ -114,7 +114,7 @@ class Kinematics:
         array = [[sin(self.angle+(-pi/4+offset)), -cos(self.angle+(-pi/4+offset)), -10*cos(-pi/4+offset)-15*sin(-pi/4+offset)],
                  [sin(self.angle+(pi/4+offset)), -cos(self.angle+(pi/4+offset)), -10*cos(pi/4+offset)+15*sin(pi/4+offset)],
                  [sin(self.angle+(pi/4+offset)), -cos(self.angle+(pi/4+offset)), 10*cos(pi/4+offset)-15*sin(pi/4+offset)],
-                 [sin(self.angle+(-pi/4+offset)), -cos(self.angle+(-pi/4+offset)), 10*cos(-pi/4+offset)+15*sin(pi/4+offset)]]
+                 [sin(self.angle+(-pi/4+offset)), -cos(self.angle+(-pi/4+offset)), 10*cos(-pi/4+offset)+15*sin(-pi/4+offset)]]
         array = np.array(array)
         self.w1, self.w2, self.w3, self.w4 = \
             np.matmul(array, [self.x, self.y, self.theta_dot])
@@ -140,9 +140,9 @@ class Kinematics:
     #     self.y = -self.PID_y.total
 
     def update(self):
-        # self.PID_theta()
-        # if not self.manual_mode:
-        #     self.PID()
+        self.PID_theta()
+        if not self.manual_mode:
+            self.PID()
         self.kinematics()
 
     def position_callback(self, pose: Pose):

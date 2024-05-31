@@ -2,6 +2,8 @@
 import rospy
 from geometry_msgs.msg import Twist
 from std_msgs.msg import Empty, Float32
+import sys
+sys.path.append('/home/mwmr/.platformio/penv/lib/python3.8/site-packages')
 from pyPS4Controller.controller import Controller
 from numpy import pi
 
@@ -63,6 +65,25 @@ class MyController(Controller):
     # def on_R3_y_at_rest(self):
     #     self.publish_movement()
 
+
+    ############### ANGLE CHANGE ###############
+
+    def on_left_arrow_press(self):
+        self.z -= pi/2
+        if self.z >= pi/2:
+            self.z = pi/2
+        elif self.z <= -pi/2:
+            self.z = -pi/2
+        self.publish_movement()
+
+    def on_right_arrow_press(self):
+        self.z += pi/2
+        if self.z >= pi/2:
+            self.z = pi/2
+        elif self.z <= -pi/2:
+            self.z = -pi/2
+        self.publish_movement()
+
     ############# SPEED ADJUSMENTS #############
 
     def on_x_press(self):
@@ -99,4 +120,5 @@ if __name__ == '__main__':
 
     controller = MyController(
         interface="/dev/input/js0", connecting_using_ds4drv=False)
+        # interface="/org/bluez/hci0", connecting_using_ds4drv=False)
     controller.listen()
