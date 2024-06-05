@@ -1,0 +1,44 @@
+<?xml version="1.0" ?>
+
+<launch>
+<!-- Arguments -->
+  <arg name="map_name" default="office2"/>
+  <arg name="map_file" default="maps/$(arg map_name).yaml"/>
+  <arg name="x_pos" default="0"/>
+  <arg name="y_pos" default="0"/>
+  <arg name="z_pos" default="0"/>
+  <arg name="cmd_vel_topic" default="/elephant/cmd_vel"/>
+  <arg name="odom_topic" default="/odom"/>
+  <!--<arg name="use_teb" default="false"/>-->
+  <arg name="open_rviz" default="false"/>
+  <arg name="rvizconfig" default="nav_mwmr/rviz"/>
+
+
+  <!-- Map server -->
+  <node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)"/>
+
+  <!-- AMCL -->
+  <include file="$(find nav_mwmr)/launch/amcl.launch">
+    <arg name="initial_pose_x" value="$(arg x_pos)"/>
+    <arg name="initial_pose_y" value="$(arg y_pos)"/>
+    <arg name="initial_pose_a" value="$(arg z_pos)"/>
+  </include>
+
+  <!-- move_base -->
+  <include file="$(find nav_mwmr)/launch/move_base_mecanum.launch">
+    <arg name="cmd_vel_topic" value="$(arg cmd_vel_topic)"/>
+    <arg name="odom_topic" value="$(arg odom_topic)"/>
+   <!--<arg name="use_teb" value="$(arg use_teb)"/>-->
+  </include>
+  
+   <!-- Parameters for Odometry -->
+  <rosparam command="load" file="$(find mecanum)/param/mecanum.yaml"/>
+
+  
+  <!-- Encoder Odometry Node -->
+  <node name="encoder_odom" pkg="mecanum" type="encoder_odom.py"/>
+
+    <!-- rviz -->
+
+    <node name="rviz" pkg="rviz" type="rviz" required="true" args="$(find nav_mwmr)/rviz/robot_navigation.rviz" />
+</launch>

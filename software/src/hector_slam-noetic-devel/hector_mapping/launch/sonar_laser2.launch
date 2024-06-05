@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <launch>
   <!-- Arguments -->
-  <arg name="tf_map_scanmatch_transform_frame_name" default="odom"/>
+  <arg name="tf_map_scanmatch_transform_frame_name" default="scanmatcher_frame"/>
   <arg name="base_frame" default="base_link"/>
   <arg name="odom_frame" default="base_link"/>
   <arg name="pub_map_odom_transform" default="true"/>

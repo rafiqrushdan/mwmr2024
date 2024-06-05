@@ -1,0 +1,16 @@
+Visualization Manager:
+  Fixed Frame: map
+  Displays:
+    - Name: Map
+      Class: rviz/Map
+      Topic: /map
+      Alpha: 0.7
+    - Name: LaserScan
+      Class: rviz/LaserScan
+      Topic: /sonar_laser
+      Size (m): 0.1
+    - Name: TF
+      Class: rviz/TF
+    - Name: RobotModel
+      Class: rviz/RobotModel
+      Robot Description: robot_description

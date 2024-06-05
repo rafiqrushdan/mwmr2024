@@ -1,0 +1,38 @@
+obstacle_range: 25
+raytrace_range: 30
+footprint: [[-0.175, -0.18], [-0.175, 0.18], [0.175, 0.18], [0.175, -0.18]]
+inflation_radius: 0.55
+transform_tolerance: 0.5
+
+observation_sources: front_ultrasonic rear_ultrasonic right_ultrasonic left_ultrasonic
+
+front_ultrasonic:
+  sensor_frame: front_ultrasonic_frame
+  data_type: Range
+  topic: /ultrasound_front
+  marking: true
+  clearing: true
+
+rear_ultrasonic:
+  sensor_frame: rear_ultrasonic_frame
+  data_type: Range
+  topic: /ultrasound_back
+  marking: true
+  clearing: true
+
+right_ultrasonic:
+  sensor_frame: right_ultrasonic_frame
+  data_type: Range
+  topic: /ultrasound_right
+  marking: true
+  clearing: true
+
+left_ultrasonic:
+  sensor_frame: left_ultrasonic_frame
+  data_type: Range
+  topic: /ultrasound_left
+  marking: true
+  clearing: true
+
+map_type: costmap
+
