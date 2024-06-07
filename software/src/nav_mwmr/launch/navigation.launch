@@ -3,7 +3,7 @@
 <launch>
 <!-- Arguments -->
   <arg name="map_name" default="office2"/>
-  <arg name="map_file" default="maps/$(arg map_name).yaml"/>
+  <arg name="map_file" default="$(find nav_mwmr)/maps/$(arg map_name).yaml"/>
   <arg name="x_pos" default="0"/>
   <arg name="y_pos" default="0"/>
   <arg name="z_pos" default="0"/>
